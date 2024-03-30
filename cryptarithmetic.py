@@ -1,37 +1,28 @@
 from itertools import permutations
 
-def solve_cryptarithmetic(puzzle):
-    # Split the puzzle into words and find unique letters
+def cryptarithmetic(puzzle):
     words = puzzle.split()
-    unique_letters = set("".join(words))
+    token = set(''.join(words))  # Changed to ''.join(words)
+    permutation = permutations('0123456789', len(token))
     
-    # Generate all possible permutations of digits from 0 to 9
-    digit_permutations = permutations("0123456789", len(unique_letters))
-    
-    for perm in digit_permutations:
-        # Create a mapping of letters to digits
-        letter_to_digit = dict(zip(unique_letters, perm))
-        
-        # Replace letters with corresponding digits in each word
+    for perm in permutation:
+        letter_to_num = dict(zip(token, perm))
         if '0' in letter_to_num.values() and any(letter in words[-1] for letter, digit in letter_to_num.items() if digit == '0'):
-        digit_words = ["".join([letter_to_digit[letter] for letter in word]) for word in words]
+            continue  # Skip permutations with leading zeros
         
-        # Check if the puzzle is valid
-        if all(int(digit_words[i]) == int(digit_words[i+1]) for i in range(len(digit_words) - 1)):
-            return letter_to_digit
-    
-    return None
+        word_join = [''.join(letter_to_num[letter] for letter in word) for word in words]
+        if int(word_join[0]) + int(word_join[1]) == int(word_join[2]):
+            return letter_to_num
+        
+    return None    
 
-# Accept user input for the cryptarithmetic puzzle
-if __name__ == "__main__":
-    print("Enter the cryptarithmetic puzzle in the format 'WORD1 + WORD2 = WORD3':")
-    puzzle = input()
+if __name__ == '__main__':
+    puzzle = input("Enter a cryptarithmetic puzzle: ").strip()
     
-    solution = solve_cryptarithmetic(puzzle)
-    
+    solution = cryptarithmetic(puzzle)
     if solution:
         print("Solution found:")
         for letter, digit in solution.items():
             print(f"{letter} = {digit}")
     else:
-        print("No solution found.")
+        print("No solution found")
