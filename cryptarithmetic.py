@@ -13,6 +13,7 @@ def solve_cryptarithmetic(puzzle):
         letter_to_digit = dict(zip(unique_letters, perm))
         
         # Replace letters with corresponding digits in each word
+        if '0' in letter_to_num.values() and any(letter in words[-1] for letter, digit in letter_to_num.items() if digit == '0'):
         digit_words = ["".join([letter_to_digit[letter] for letter in word]) for word in words]
         
         # Check if the puzzle is valid
